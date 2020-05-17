@@ -9,6 +9,7 @@ import pickle
 import trstop
 from string import digits
 import flask
+import json
 
 model = load_model('my_model.h5')
 replace_espaco = re.compile("[/(){}\[\]\|@,.;!#'?₺*]")
@@ -37,9 +38,16 @@ def getSikayetSinif(complaint):
 app = flask.Flask(__name__)
 app.config["DEBUG"] = False
 
-@app.route('/sikayet/<string:sikayet>')
-def sonuc(sikayet):
-    return str(getSikayetSinif(sikayet))
+@app.route('/sikayet', methods=['POST'])
+def sonuc():
+    sikayet_json = flask.request.get_json(force=True)
+    sikayet_data = sikayet_json["sikayet"]
+    departman = str(getSikayetSinif(sikayet_data))
+    departman = departman.replace("['","") 
+    departman = departman.replace("']","") 
+    json_data = {"sikayet":sikayet_data, "departman": departman}
+    json_sonuc = json.dumps(json_data)
+    return json_sonuc
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
