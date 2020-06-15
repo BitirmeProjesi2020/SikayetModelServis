@@ -47,7 +47,7 @@ def sonuc():
     departman = str(getSikayetSinif(sikayet_data))
     departman = departman.replace("['","") 
     departman = departman.replace("']","") 
-    json_data = {"sikayet":sikayet_data, "departman": departman}
+    json_data = {"departman": departman}
     json_sonuc = json.dumps(json_data)
     return json_sonuc
 
